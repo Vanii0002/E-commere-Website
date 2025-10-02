@@ -1,6 +1,7 @@
 import express from "express";
 import userModel from "../models/userModel.js";
 import bcrypt from "bcrypt";
+import Token from "../services/Authication.js"
 
 const Signup=async(req,res)=>{
 
@@ -12,7 +13,7 @@ const Signup=async(req,res)=>{
     Email,
     password:hashedPassword,
    })
-   return res.render("home");
+   return res.render("login");
 }
 
 catch(e)
@@ -44,8 +45,10 @@ try
     }
 
     // macth hogya to 
-
-      return res.render("home",{user3:"Sucess"});
+     const token=Token.createTokenForUser(user);
+     console.log(token);
+     res.cookie("token",token)
+   return res.render("home",{user3:"Sucess",token});
 
    
 } 
