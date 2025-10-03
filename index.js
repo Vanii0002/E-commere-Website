@@ -26,6 +26,13 @@ app.use(cookieParser()) // cookie ko read krna
 app.use(authMiddleware);
 
 app.use("/",userRouter);
+app.get("/", (req, res) => {
+    const user=req.user;
+  if (user) {
+    return res.redirect("/home");
+  }
+  return res.redirect("/login");
+});
 
 
 

@@ -47,8 +47,14 @@ try
     // macth hogya to 
      const token=Token.createTokenForUser(user);
      console.log(token);
-     res.cookie("token",token)
-   return res.render("home",{user3:"Sucess",token});
+      res.cookie("token", token, {
+      httpOnly: true,
+      secure: false,   
+      maxAge: 24 * 60 * 60 * 1000, 
+    });
+
+
+   return res.redirect("/home");
 
    
 } 
