@@ -9,6 +9,7 @@ userRouter.get("/home",authMiddleware,(req, res) => {
   if (!user) {
     return res.redirect("/login");
   }
+  console.log(user);
     return res.render("home", { user: req.user });
 
 });
