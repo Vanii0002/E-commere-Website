@@ -88,3 +88,22 @@ export const login= async(req,res)=>{
         }   
         };
 
+export const home= async(req,res)=>{
+  try{
+      if(!req.user)     
+
+          { 
+            return res.status(200).json({success:true,message:"Welcome to the home page, user not logged in"});
+          }
+          const user= await User.findById(req.user.user);
+          if(!user)
+          {
+            return res.status(200).json({success:true,message:"Welcome to the home page, user not logged in"});
+          } 
+          res.status(200).json({success:true,message:`Welcome to the home page, ${user.name}`});
+      }
+
+      catch(error){
+          res.status(500).json({success:false,message:"Failed to load home page",error:error.message});  
+      } 
+      };

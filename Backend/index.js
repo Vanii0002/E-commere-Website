@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import connectDB from "./services/mongo.js";
 import cookieParser from "cookie-parser";
 import authRoute from "./routers/authRoute.js";
+import checkForAuthenticationCookie from "./middleware/authantication.js";
 import cors from "cors";
 
 
@@ -11,6 +12,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(checkForAuthenticationCookie("token"));
+
 
 app.use(cors({
 origin: "http://localhost:5173",  
