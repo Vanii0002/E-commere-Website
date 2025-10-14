@@ -1,5 +1,5 @@
 import express from "express";
-import { register, login, logout, home } from "../controllers/authController.js";
+import { register, login, logout, home,GoogleLogin } from "../controllers/authController.js";
 import authRequired from "../middleware/authRequired.js";
 const router = express.Router();
 
@@ -7,7 +7,7 @@ const router = express.Router();
 router.post("/register", register);
 router.post("/login", login);
 router.get("/logout", logout);
-
+router.post("/GoogleLogin",GoogleLogin);
 // Protected route example: home
 router.get("/", authRequired, home);
 
