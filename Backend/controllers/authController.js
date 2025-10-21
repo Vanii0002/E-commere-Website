@@ -25,11 +25,11 @@ try{
     return res.status(400).json({success:false,message:"Password is not strong enough"});
   }
   
-  let hassedPassword=await bcrypt.hash(password,10);
+  let hashedPassword=await bcrypt.hash(password,10);
 
 
-    const user= await User.create({name,email,password:hassedPassword});
-    let token=generateToken({user:user._id});
+    const user= await User.create({name,email,password:hashedPassword});
+     const token = generateToken(user);
     console.log(token);
     res.cookie("token",token,
     {  
@@ -64,7 +64,7 @@ export const login= async(req,res)=>{
     if(!isPasswordMatch){
       return res.status(400).json({success:false,message:"Invalid credentials"});
     }   
-        let token=generateToken({user:user._id});   
+          const token = generateToken(user); 
         res.cookie("token",token,
         {  
       httpOnly:true,        
@@ -92,32 +92,11 @@ export const login= async(req,res)=>{
         }   
         };
 
-export const home= async(req,res)=>{
-  console.log("Home route called");
-  try{
-      if(!req.user)     
 
-          { 
-            return res.status(401).json({success:true,message:"Welcome to the home page, user not logged in"});
-          }
-
-          const user= await User.findById(req.user.user);
-          if(!user)
-          {
-            return res.status(401).json({success:true,message:"Welcome to the home page, user not logged in"});
-          } 
-
-          res.status(200).json({success:true,message:`Welcome to the home page, ${user.name}`});
-      }
-
-      catch(error){
-          res.status(500).json({success:false,message:"Failed to load home page",error:error.message});  
-      } 
-      };
 
  export const GoogleLogin= async(req,res)=>{
   try{
-        console.log("🔥 GoogleLogin called");
+        console.log(" GoogleLogin called");
 
       const {name,email}=req.body;   
          console.log('Google login data:', req.body);      
@@ -129,7 +108,7 @@ let hassedPassword=await bcrypt.hash("Google Auth",10);
       
        
 
-        let token=generateToken({user:user._id});   
+        let token=generateToken(user);   
         
         res.cookie("token",token,
         { 
@@ -156,10 +135,10 @@ let hassedPassword=await bcrypt.hash("Google Auth",10);
     const scopes = ["user:email"];
     const authorizationURL = github.createAuthorizationURL(state, scopes);
 
-    // Store the state in a cookie or session for later validation
+
     res.cookie("state", state, { httpOnly: true, secure: false });
 
-    // Redirect the user to GitHub's authorization page
+
         console.log("Authorization URL:", authorizationURL); 
     res.redirect(authorizationURL);
   } catch (error) {
@@ -221,5 +200,3 @@ export const initGitHubPassport = () => {
     done(null, user);
   });
 };
-//i --- IGNORE ---gnore ---
-//i --- IGNORE ---
