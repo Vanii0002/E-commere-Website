@@ -24,7 +24,8 @@ function checkForAuthenticationCookie(cookieName)
 }
 
 export function authRequired(req, res, next) {
-  const tokenCookieValue = req.cookies?.token;
+  const tokenCookieValue = req.cookies?.adminToken;
+  console.log(tokenCookieValue);
 
   if (!tokenCookieValue) {
     console.log("No token cookie found");
@@ -37,7 +38,7 @@ export function authRequired(req, res, next) {
       return res.status(403).json({ message: "Forbidden: Invalid token" });
     }
     req.user = userPayload;
-    next(); // ✅ Token valid → proceed to next controller
+    next(); 
   } catch (error) {
     console.log("Token verification failed:", error.message);
     return res.status(403).json({ message: "Invalid or expired token" });

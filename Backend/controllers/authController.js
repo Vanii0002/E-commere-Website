@@ -1,10 +1,11 @@
 
 import User from "../models/UserModel.js";
-import validator from "validator";
+import pkg from "validator";
+const { isEmail } = pkg;
 import bcrypt from "bcryptjs";
 import passport from "passport";
 import { Strategy as GitHubStrategy } from "passport-github2";
-import { generateToken } from "../services/token.js";
+import { generateToken,generateToken1} from "../services/token.js";
 
 
 export const register= async(req,res)=>{
@@ -29,16 +30,16 @@ try{
 
 
     const user= await User.create({name,email,password:hashedPassword});
-     const token = generateToken(user);
-    console.log(token);
-    res.cookie("token",token,
-    {  
-  httpOnly:true,
-  secure:false,
-  sameSite:"strict",
-  maxAge:24*60*60*1000,
+            const token = generateToken(user);
+            console.log(token);
+            res.cookie("token",token,
+            {  
+          httpOnly:true,
+          secure:false,
+          sameSite:"strict",
+          maxAge:24*60*60*1000,
 
-    } 
+            } 
     );
 
     res.status(201).json({success:true,message:"User registered successfully",user});     
@@ -200,3 +201,55 @@ export const initGitHubPassport = () => {
     done(null, user);
   });
 };
+
+
+export const adminLogin=async(req,res)=>{
+try{
+let{email,password}=req.body;
+
+if(email === process.env.ADMIN_EMAIL && password ===process.env.ADMIN_PASSWORD)
+{
+          const token = generateToken1(email);
+            console.log(token);
+            res.cookie("adminToken",token,
+            {  
+          httpOnly:true,
+          secure:false,
+          sameSite:"strict",
+          maxAge:24*60*60*1000,
+
+            } 
+    );
+
+   return  res.status(201).json({success:true,message:"admin registered successfully",email});     
+
+}
+
+    res.status(401).json({success:false,message:"Invalid Creditionals"});     
+
+
+
+}
+
+catch(e)
+{
+  console.error("Error in admin panel login auth:", e);
+    res.status(500).send("Internal Server Error");
+}
+
+}
+
+
+export const adminLogout=async(req,res)=>{
+
+
+    try{
+        console.log(" admin Logout route called");
+          res.clearCookie("adminToken");  
+            res.status(200).json({success:true,message:"User logged out successfully"});
+        }
+        catch(error){
+            res.status(500).json({success:false,message:"User logout failed",error:error.message});  
+        }   
+        };
+
